@@ -1,5 +1,6 @@
 {
   "name": "firstElectron",
+  "productName": "First Electron App",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -11,5 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^1.7.9"
+  },
+  "dependencies": {
+    "file-system": "^2.2.2"
   }
 }

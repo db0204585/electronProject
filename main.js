@@ -1,16 +1,18 @@
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-const ipc = electron.ipcMain
-
+const electron = require("electron");
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const Menu = electron.Menu;
+const ipc = electron.ipcMain;
+//const remote = require("electron").remote;
+//const electronFs = remote.require("fs");
+//const electronDialog = remote.dialog;
 
 app.on('ready', _=>{
     console.log("sup w0rld")
     mainWindow = new BrowserWindow({ width:300, height: 500})
     mainWindow.loadURL(`file://${__dirname}/index.html`)
 
-    const menu = Menu.buildFromTemplate(myTemplate)
+    const menu = Menu.buildFromTemplate(customMenu);
     Menu.setApplicationMenu(menu)
 
 
@@ -20,13 +22,29 @@ app.on('ready', _=>{
     })
 })
 
-const myTemplate = [
-    {label: "About",
-     click: _=>{
-         console.log("You clicked me!")
-     }               
-    }
-]
+const customMenu = [
+    {
+    label: "File",
+    submenu : [
+            {label : "Open File"
+            },
+            {type: "separator"
+            }, 
+            {label : "Quit",
+            click: _=>{
+                app.quit()
+            },
+             accelerator: "Ctrl+Q"}
+                                
+            ]
+        },{
+            label : "Dev Tools",
+            click : function(item, focusedWindow){
+                focusedWindow.toggleDevTools();
+            },
+            accelerator: "Ctrl+T"
+        }
+    ]
 
 ipc.on('countdown-start', (evt,arg) =>{
     let count = 3
