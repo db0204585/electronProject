@@ -1,11 +1,14 @@
 {
-  "name": "firstElectron",
-  "productName": "First Electron App",
+  "name": "JavaScript-Final",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/db0204585/electronProject"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,8 @@
     "electron": "^1.7.9"
   },
   "dependencies": {
-    "file-system": "^2.2.2"
+    "file-system": "^2.2.2",
+    "materialize-css": "^0.100.2",
+    "vue": "^2.5.10"
   }
 }

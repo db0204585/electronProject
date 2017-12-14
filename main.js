@@ -1,15 +1,31 @@
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-const {dialog} = require('electron')
+//Electron Setup and stuff
+//David Blacksher
+//Web Dev II
+//Kirsten Markley
+//December 15 2017
+
+//Constants
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const Menu = electron.Menu;
+const ipc = electron.ipcMain;
+const {dialog} = require('electron');
+
+//Variables
+//var json = require('json-file');
+var fs = require('fs');
 
 
 
 app.on('ready', function(){
     //console.log("electron running!")
     mainWindow = new BrowserWindow({
- })
+        width: 1000,
+        height: 800,
+        resizable: false
+
+ });
 
  mainWindow.loadURL(`file://${__dirname}/index.html`)
 
@@ -17,7 +33,7 @@ app.on('ready', function(){
  Menu.setApplicationMenu(menu)
 
     mainWindow.on('closed', function(){
-        console.log('closed')
+        console.log('Application has been terminated.')
         mainWindow = null
     })
 })
@@ -38,7 +54,7 @@ const template = [
             },
         ]
        },{
-            label:"Edit",
+            label:"Options",
             submenu:[
                 {
                     label:"Add Item"
@@ -69,3 +85,16 @@ const template = [
         accelerator: 'ctrl+I'
     }
 ]
+
+//Add event listeners
+ipc.on('open-json', (event, path)=>{
+    var file = json.read(path);
+    var obj = file.get('items');
+    mainWindow.webContents.send('obtain-file-content', obj);
+});
+ipc.on('save-json', (event, path)=>{
+    console.log(args[0]);
+    var file = `${args[1]}`;
+    console.log(file);
+    fs.writeFileSync(file, JSON.stringify(args[0]));
+});
