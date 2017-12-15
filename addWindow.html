@@ -7,14 +7,32 @@
   <head>
     <meta charset="UTF-8">
     <title>Add Task to Complete</title>
+     <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">  
   </head>
   <body>
+      <div class = "container">
       <form>
           <div>
               <label>Enter Task:</label>
-              <input type="text" id="item" autofocus>
+              <input type="text" id="task" autofocus>
           </div>
-          <button type="submit">Add Task to List</button>
+          <button class="btn waves-effect waves-light" type="submit">Add Task to List</button>
       </form>
+    </div>
+
+      <script>
+      const electron = require('electron');
+      const {ipcRenderer} = electron;
+
+      const form = document.querySelector('form');
+      form.addEventListener('submit', submitForm);
+
+      function submitForm(e){
+          e.preventDefault();
+          const task = document.querySelector('#task').value;
+          ipcRenderer.send('task:add', task)
+      }
+      </script>
   </body>
 </html>

@@ -7,12 +7,61 @@
     <meta charset="UTF-8">
     <title>TaskManager</title>
     <link rel="stylesheet" href="styles.css">
+     <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  
   </head>
   <body>
     <main id = "app">
-      <h1>Custom Task List Manager</h1>
+      <nav>
+        <div class="nav-wrapper">
+          <a class="brand-logo center">Task List</a>
+
+        </div>
+      </nav>
+      <ul>
+
+      </ul>
+
+      <!--Save button-->
+      <button class="btn waves-effect waves-light" type="submit" id="savebtn">Save</button>
+      
     </main>
 
-    <script src="main.js"></script>
+    <script>
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const ul = document.querySelector('ul');
+
+    //Catching add task
+    ipcRenderer.on('task:add', function(e, task){
+      ul.className = 'collection';
+      const li = document.createElement('li');
+      li.className = 'collection-item';
+      const taskText = document.createTextNode(task);
+      li.appendChild(taskText);
+      ul.appendChild(li);
+    });
+
+    //Clearing task list
+    ipcRenderer.on('task:clear', function(){
+      ul.innerHTML = '';
+      ul.className = '';
+    });
+
+    //Remove a task from list
+    ul.addEventListener('dblclick', removeTask);
+
+    function removeTask(e){
+      e.target.remove();
+      if(ul.children.length == 0){
+        ul.className = '';
+      }
+    }
+    </script>
+
+    <script>
+    require('./renderer.js')
+    </script>
   </body>
 </html>

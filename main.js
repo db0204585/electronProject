@@ -8,7 +8,7 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 let mainWindow;
 let addWindow;
@@ -27,6 +27,7 @@ app.on('ready', function(){
 
     //Quit app when main window is closed regardless of other window
     mainWindow.on('closed', function(){
+        console.log("Application has been terminated.")
         app.quit();
     });
 
@@ -58,6 +59,12 @@ function createAddWindow(){
     });
 }
 
+//Catch task:add
+ipcMain.on('task:add', function(e, task){
+    mainWindow.webContents.send('task:add', task);
+    addWindow.close();
+});
+
 //Creating menu template
 const mainMenuTemplate = [
     {
@@ -71,10 +78,10 @@ const mainMenuTemplate = [
             },
         ]
     },{
-        label: 'Options',
+        label: 'Tasklist Options',
         submenu: [
             {
-                label: 'Add Item', 
+                label: 'Add Task', 
                 click(){
                     createAddWindow();
                 }
@@ -83,7 +90,10 @@ const mainMenuTemplate = [
                 type: 'separator'
             },
             {
-                label: 'Clear Items'
+                label: 'Clear Task List',
+                click(){
+                    mainWindow.webContents.send('task:clear')
+                }
             },
             {
                 type: 'separator'
@@ -105,7 +115,9 @@ if(process.platform == 'darwin'){
     mainMenuTemplate.unshift({});
 }
 
-//Making sure our dev tools show up in the correct window we are operating in
+//Making sure our dev tools show up in the correct window we are operating in and
+//when we are working in production mode (not necessary for this project so I never took the application
+//out of production mode.)
 if(process.env.NODE_ENV !== 'production'){
     mainMenuTemplate.push({
         label: 'Dev Tools',
