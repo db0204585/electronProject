@@ -5,107 +5,14 @@
         Kirsten Markley-->
   <head>
     <meta charset="UTF-8">
-    <title>FirstElectron</title>
+    <title>TaskManager</title>
     <link rel="stylesheet" href="styles.css">
-      <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-
   </head>
   <body>
-
     <main id = "app">
+      <h1>Custom Task List Manager</h1>
+    </main>
 
-      <!--Title and description of app-->
-      <div class="title-desc">
-    <h1>DDT Dave's Task Managing System</h1>
-    <p>With this custom task managing app you can track everything you need to get done using a JSON file. Cross platform compatiblity using Electron!</p>
-        </div>
-
-        <!-- Main page content -->
-        <div class="container">
-
-          <!--Task List-->
-          <ul class="list" id="tasks">
-            <ul v-for="item in tasks.items">
-              <li class="list-item" v-if="item.completed == false">
-                {{task.name}}
-                <a v=on:click="removeItem(item.id)" href="#">check</a>
-                  </li>
-                </ul>
-              </ul>
-
-              <ul>
-                <li><a class="btn modal-trigger" href="#addTask"><i class="material-icons">Add Item</i></a></li>
-                <li><a class="btn modal-trigger" href="#newTaskList"><i class="material-icons">New List</i></a></li>
-                <li><a class="btn modal-trigger" href="#saveList"><i class="material-icons">Save List</i></a></li>
-              </ul>
-
-          <!--Add Task-->
-          <div id="addTask" class="modal">
-            <div class="modal-content">
-            <h2>New Task</h2>
-            <p>Enter a short description of the task you need to complete.</p>
-
-            <div class="row">
-              <div class="input-field col s12">
-                <input value="Finish Electron Project for JavaScript class" id="taskEntered" type="text" class="validate">
-                  <label for="taskEntered">Task Description</label>
-                    </div>
-                      </div>
-                        </div>
-                          </div>
-
-                      <div class="modal-footer">
-                        <button v-on:click="addTask" class="modal-action modal-close">Add Task</button>
-                          </div>
-                      </div>
-
-                      <!--New Task List-->
-                      <div id="newTaskList" class="modal">
-                        <div class="modal-content">
-                        <h2>New Task List</h2>
-                        <p>If you create a new list all the data from your current list will be deleted.</p>
-                        </div>
-
-                      <div class="modal-footer">
-                      <button v-on:click="newTaskList" class="modal-action modal-close">Continue</button>
-                      </div>
-                      </div>
-
-                      <!--Save Task List-->
-                      <div id="saveTaskList" class="modal">
-                        <div class="modal-content">
-                        <h2>Save Task List</h2>
-                        <p>Are you sure you'd like to save this task list?</p>
-                      </div>
-
-                      <div class="modal-footer">
-                        <button id="saveFile" class="modal-action modal-close">Yes</button>
-                      </div>
-                        </div>
-
-                      </main>
-
-
- 
-
-    
-    
-    
-    <script src="manager.js"></script>
     <script src="main.js"></script>
-    <script>require("./main.js")</script>
-    <script>require("./manager.js")</script>
-
-        <!-- The jQuery file path -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
-
-    <!-- Vue Javascript -->
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-
-
-      <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
   </body>
 </html>

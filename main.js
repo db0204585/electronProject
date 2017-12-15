@@ -4,97 +4,121 @@
 //Kirsten Markley
 //December 15 2017
 
-//Constants
 const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const Menu = electron.Menu;
-const ipc = electron.ipcMain;
-const {dialog} = require('electron');
+const url = require('url');
+const path = require('path');
 
-//Variables
-//var json = require('json-file');
-var fs = require('fs');
+const {app, BrowserWindow, Menu} = electron;
+
+let mainWindow;
+let addWindow;
 
 
-
+//Listening for app to be ready
 app.on('ready', function(){
-    //console.log("electron running!")
-    mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 800,
-        resizable: false
+    //New window
+    mainWindow = new BrowserWindow({});
+    //Loading my html file into window
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
 
- });
-
- mainWindow.loadURL(`file://${__dirname}/index.html`)
-
- const menu = Menu.buildFromTemplate(template)
- Menu.setApplicationMenu(menu)
-
+    //Quit app when main window is closed regardless of other window
     mainWindow.on('closed', function(){
-        console.log('Application has been terminated.')
-        mainWindow = null
-    })
-})
+        app.quit();
+    });
 
-var showOpen = function(){
-    dialog.showOpenDialog({properties: ['openFile'],})
+
+    //Build my menu from template
+    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+    //Insert menu
+    Menu.setApplicationMenu(mainMenu);
+});
+
+//Handling create add window
+function createAddWindow(){
+    //New window
+    addWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        title: 'Add Task to Complete'
+    });
+    //Loading my html file into window
+    addWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'addWindow.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
+
+    //Optimizing memory space
+    addWindow.on('close', function(){
+        addWindow = null;
+    });
 }
 
-const template = [
+//Creating menu template
+const mainMenuTemplate = [
     {
-        label: "File",
+        label: 'File',
         submenu: [
             {
                 label: 'Open',
                 click: function(){
-                   showOpen()
+                    showOpen();
                 }
             },
         ]
-       },{
-            label:"Options",
-            submenu:[
-                {
-                    label:"Add Item"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label:"Clear Items"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    label: "Quit",
-                    click: function(){
-                        app.quit()
-                    },
-                    accelerator: 'Ctrl+Q'
-                }
-                
-            ]      
     },{
-        label:"Dev Tools",
-        click: function(item, focusedWindow){
-            focusedWindow.toggleDevTools()
-        },
-        accelerator: 'ctrl+I'
+        label: 'Options',
+        submenu: [
+            {
+                label: 'Add Item', 
+                click(){
+                    createAddWindow();
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Clear Items'
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Quit',
+                click(){
+                    app.quit();
+                },
+                accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+            }
+        ]
     }
-]
+];
 
-//Add event listeners
-ipc.on('open-json', (event, path)=>{
-    var file = json.read(path);
-    var obj = file.get('items');
-    mainWindow.webContents.send('obtain-file-content', obj);
-});
-ipc.on('save-json', (event, path)=>{
-    console.log(args[0]);
-    var file = `${args[1]}`;
-    console.log(file);
-    fs.writeFileSync(file, JSON.stringify(args[0]));
-});
+//If the person is on a mac 'File' on our menu won't be shown, Instead 'Electron' will. 
+//This is a fix to check if they are on a mac and fix that.
+if(process.platform == 'darwin'){
+    mainMenuTemplate.unshift({});
+}
+
+//Making sure our dev tools show up in the correct window we are operating in
+if(process.env.NODE_ENV !== 'production'){
+    mainMenuTemplate.push({
+        label: 'Dev Tools',
+        submenu: [
+            {
+                label: 'Toggle Dev Tools',
+                accelerator: process.platform == 'darwin' ? 'Command+T' : 'Ctrl+T',
+                click(item, focusedWindow){
+                    focusedWindow.toggleDevTools();
+                }
+            },{
+                role: 'reload'
+            }
+        ]
+    });
+}
